@@ -379,7 +379,7 @@ export abstract class BaseResource<
             this.callerSession = SessionProxy.getSession(creds, event.region);
             action = event.action;
             callbackContext = event.callbackContext || {};
-        } catch (err) {
+        } catch (err: any) {
             this.log('Invalid request');
             throw new InternalFailure(`${err} (${err.name})`);
         }
@@ -417,7 +417,7 @@ export abstract class BaseResource<
                 action,
                 callbackContext
             );
-        } catch (err) {
+        } catch (err: any) {
             if (!err.stack) {
                 Error.captureStackTrace(err);
             }
@@ -458,7 +458,7 @@ export abstract class BaseResource<
             providerCredentials = event.requestData.providerCredentials;
             action = event.action;
             callbackContext = event.callbackContext || {};
-        } catch (err) {
+        } catch (err: any) {
             throw new InvalidRequest(`${err} (${err.name})`);
         }
         return [
@@ -485,7 +485,7 @@ export abstract class BaseResource<
                 region: request.region,
             });
             return unmodeled.toModeled<T>(this.modelTypeReference);
-        } catch (err) {
+        } catch (err: any) {
             this.log('Invalid request');
             throw new InvalidRequest(`${err} (${err.name})`);
         }
@@ -506,7 +506,7 @@ export abstract class BaseResource<
             return this.typeConfigurationTypeReference.deserialize(
                 request.requestData.typeConfiguration
             );
-        } catch (err) {
+        } catch (err: any) {
             this.log('Invalid Type Configuration');
             throw new InvalidTypeConfiguration(this.typeName, `${err} (${err.name}`);
         }
@@ -594,7 +594,7 @@ export abstract class BaseResource<
                     callback,
                     typeConfiguration
                 );
-            } catch (err) {
+            } catch (err: any) {
                 error = err;
             }
             const endTime = new Date(Date.now());
@@ -608,7 +608,7 @@ export abstract class BaseResource<
                 await this.publishExceptionMetric(action, error);
                 throw error;
             }
-        } catch (err) {
+        } catch (err: any) {
             if (!err.stack) {
                 Error.captureStackTrace(err);
             }

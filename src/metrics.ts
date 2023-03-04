@@ -73,7 +73,7 @@ export class MetricsPublisher {
                 ],
             });
             this.log('Response from "putMetricData"', metric);
-        } catch (err) {
+        } catch (err: any) {
             if (err.retryable) {
                 throw err;
             } else {

@@ -135,7 +135,7 @@ export class CloudWatchLogPublisher extends LogPublisher {
                     this.nextSequenceToken
                 );
                 return;
-            } catch (err) {
+            } catch (err: any) {
                 const errorCode = err.code || err.name;
                 this.platformLogger.log(
                     `Error from "putLogEvents" with sequence token ${this.nextSequenceToken}`,
@@ -268,7 +268,7 @@ export class CloudWatchLogHelper {
                 await this.createLogGroup();
             }
             return await this.createLogStream();
-        } catch (err) {
+        } catch (err: any) {
             this.log(
                 `Initializing logging group setting failed with error: ${err.toString()}`
             );
@@ -289,7 +289,7 @@ export class CloudWatchLogHelper {
                     return logGroup.logGroupName === this.logGroupName;
                 });
             }
-        } catch (err) {
+        } catch (err: any) {
             this.log(err);
             await this.emitMetricsForLoggingFailure(err);
         }
@@ -308,7 +308,7 @@ export class CloudWatchLogHelper {
                 logGroupName: this.logGroupName,
             });
             this.log('Response from "createLogGroup"', response);
-        } catch (err) {
+        } catch (err: any) {
             const errorCode = err.code || err.name;
             if (errorCode !== 'ResourceAlreadyExistsException') {
                 throw err;
@@ -327,7 +327,7 @@ export class CloudWatchLogHelper {
                 logStreamName: this.logStreamName,
             });
             this.log('Response from "createLogStream"', response);
-        } catch (err) {
+        } catch (err: any) {
             const errorCode = err.code || err.name;
             if (errorCode !== 'ResourceAlreadyExistsException') {
                 throw err;
@@ -401,7 +401,7 @@ export class S3LogPublisher extends LogPublisher {
             );
             this.platformLogger.log('Response from "putObject"', response);
             return;
-        } catch (err) {
+        } catch (err: any) {
             this.platformLogger.log(
                 `An error occurred while putting log events [${message}] to resource owner account, with error: ${err.toString()}`
             );
@@ -468,7 +468,7 @@ export class S3LogHelper {
             } else {
                 return await this.createFolder();
             }
-        } catch (err) {
+        } catch (err: any) {
             this.log(
                 `Initializing S3 bucket and folder failed with error: ${err.toString()}`
             );
@@ -494,7 +494,7 @@ export class S3LogHelper {
                 } exist in bucket ${this.bucketName}.`
             );
             return Promise.resolve(folderExists);
-        } catch (err) {
+        } catch (err: any) {
             const errorCode = err.code || err.name;
             if (errorCode === 'NoSuchBucket') {
                 this.log(
@@ -514,7 +514,7 @@ export class S3LogHelper {
                 Bucket: this.bucketName,
             });
             this.log('Response from "createBucket"', response);
-        } catch (err) {
+        } catch (err: any) {
             const errorCode = err.code || err.name;
             if (
                 errorCode !== 'BucketAlreadyOwnedByYou' &&
@@ -608,7 +608,7 @@ export class LoggerProxy implements Logger {
                 try {
                     await logPublisher.publishLogEvent(formatted, eventTime);
                     this.tracker.addCompleted();
-                } catch (err) {
+                } catch (err: any) {
                     console.error(err);
                     if (err.retryable === true) {
                         try {
